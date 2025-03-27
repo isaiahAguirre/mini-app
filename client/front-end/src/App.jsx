@@ -50,7 +50,7 @@ function App() {
           {
             tempSearchList.push(
               <p key = {element.id}>
-                {element.title} <IconButton onClick={()=>{delMovie(element.id) }}><DeleteForeverIcon/></IconButton>
+                {element.title} <IconButton onClick={()=>{delMovie(element.id)}}><DeleteForeverIcon/></IconButton>
               </p>
             )
           }
@@ -60,7 +60,7 @@ function App() {
         tempSearchList = []
       })
       .catch(err => console.log(err))
-  }, [search]);
+  }, [search, delMovie, addMovie]);
 
 
 
@@ -68,7 +68,7 @@ function App() {
     <>
     <div><TextField id="search" label="Search..." variant="outlined" onChange={e => setSearch(e.target.value)}/></div>
     <div><TextField id="add-movie" label="Movie to add..." variant="outlined" onChange={e => setMovieTitle(e.target.value)}/></div>
-    <Button startIcon={<AddIcon/>} onClick={()=>addMovie()} >Add Movie</Button>
+    <Button startIcon={<AddIcon/>} onClick={()=>{addMovie()}} >Add Movie</Button>
       <div className='movie-list'> 
         <h1>Movies:</h1>
           {movieDisplay}

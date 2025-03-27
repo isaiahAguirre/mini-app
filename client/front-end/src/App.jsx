@@ -2,9 +2,12 @@ import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import TextField from '@mui/material/TextField';
 
 function App() {
-  const [movies, setMovies] = useState([]);
+  const[search, setSearch] = useState('');
+  const[movieDisplay, setMovieDisplay] = useState('');
+
   // const movies = [
   //   {title: 'Mean Girls'},
   //   {title: 'Hackers'},
@@ -16,18 +19,25 @@ function App() {
   useEffect(() => {
     fetch('http://localhost:8081/movies')
       .then(res => res.json())
-      .then(data => setMovies(data))
-      .catch(err => setMovies(err))
-  }, []);
+      .then(movies =>{
+        let tempSearchList = [];
 
-  const movieList = movies.map((movie, id) =>{
-    return(<h1 key = {id}>{movie.title}</h1>)
-  })
+        movies.map((element, id) => {
+          if ((element.title.toLowerCase().includes(search.toLowerCase())) || (search === '')) {tempSearchList.push(<p key = {id}>{element.title}</p>)}
+        })
+
+        setMovieDisplay(tempSearchList)
+        tempSearchList = []
+      })
+      .catch(err => setMovies(err))
+  }, [search]);
 
   return (
     <>
-      <div>
-          {movieList}
+    <TextField id="search" label="Search..." variant="outlined" onChange={e => setSearch(e.target.value)}/>
+      <div className='movie-list'> 
+        <h1>Movies:</h1>
+          {movieDisplay}
       </div>
     </>
   )

@@ -11,13 +11,33 @@ function App() {
   const[search, setSearch] = useState('');
   const[movieTitle, setMovieTitle] = useState('');
   const[movieDisplay, setMovieDisplay] = useState('');
+  const[delId, setDelId] = useState('');
 
-  const addMovie = () =>{
-
+  const addMovie = async () =>{
+    try{
+      const response = await fetch('http://localhost:8081/movies', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: movieTitle
+      }),
+      })
+    }catch(err){
+      console.log('Error: ', err)
+    }
   }
 
-  const delMovie = () =>{
-
+  const delMovie = async (id) =>{
+    try{
+      const response = await fetch(`http://localhost:8081/movies/${id}`, {
+        method: 'DELETE',
+      })
+    }catch(err){
+      console.log('Error: ', err)
+    }
   }
 
   useEffect(() => {
@@ -25,13 +45,12 @@ function App() {
       .then(res => res.json())
       .then(movies =>{
         let tempSearchList = [];
-
         movies.map((element) => {
           if ((element.title.toLowerCase().includes(search.toLowerCase())) || (search === ''))
           {
             tempSearchList.push(
               <p key = {element.id}>
-                {element.title} <IconButton ><DeleteForeverIcon/></IconButton>
+                {element.title} <IconButton onClick={()=>{delMovie(element.id) }}><DeleteForeverIcon/></IconButton>
               </p>
             )
           }
@@ -49,7 +68,7 @@ function App() {
     <>
     <div><TextField id="search" label="Search..." variant="outlined" onChange={e => setSearch(e.target.value)}/></div>
     <div><TextField id="add-movie" label="Movie to add..." variant="outlined" onChange={e => setMovieTitle(e.target.value)}/></div>
-    <Button startIcon={<AddIcon/>} >Add Movie</Button>
+    <Button startIcon={<AddIcon/>} onClick={()=>addMovie()} >Add Movie</Button>
       <div className='movie-list'> 
         <h1>Movies:</h1>
           {movieDisplay}

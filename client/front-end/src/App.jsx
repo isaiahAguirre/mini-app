@@ -1,20 +1,24 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react';
+import './App.css';
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
 
 function App() {
   const[search, setSearch] = useState('');
+  const[movieTitle, setMovieTitle] = useState('');
   const[movieDisplay, setMovieDisplay] = useState('');
 
-  // const movies = [
-  //   {title: 'Mean Girls'},
-  //   {title: 'Hackers'},
-  //   {title: 'The Grey'},
-  //   {title: 'Sunshine'},
-  //   {title: 'Ex Machina'},
-  // ];
+  const addMovie = () =>{
+
+  }
+
+  const delMovie = () =>{
+
+  }
 
   useEffect(() => {
     fetch('http://localhost:8081/movies')
@@ -22,19 +26,30 @@ function App() {
       .then(movies =>{
         let tempSearchList = [];
 
-        movies.map((element, id) => {
-          if ((element.title.toLowerCase().includes(search.toLowerCase())) || (search === '')) {tempSearchList.push(<p key = {id}>{element.title}</p>)}
+        movies.map((element) => {
+          if ((element.title.toLowerCase().includes(search.toLowerCase())) || (search === ''))
+          {
+            tempSearchList.push(
+              <p key = {element.id}>
+                {element.title} <IconButton ><DeleteForeverIcon/></IconButton>
+              </p>
+            )
+          }
         })
 
         setMovieDisplay(tempSearchList)
         tempSearchList = []
       })
-      .catch(err => setMovies(err))
+      .catch(err => console.log(err))
   }, [search]);
+
+
 
   return (
     <>
-    <TextField id="search" label="Search..." variant="outlined" onChange={e => setSearch(e.target.value)}/>
+    <div><TextField id="search" label="Search..." variant="outlined" onChange={e => setSearch(e.target.value)}/></div>
+    <div><TextField id="add-movie" label="Movie to add..." variant="outlined" onChange={e => setMovieTitle(e.target.value)}/></div>
+    <Button startIcon={<AddIcon/>} >Add Movie</Button>
       <div className='movie-list'> 
         <h1>Movies:</h1>
           {movieDisplay}
